@@ -1,2 +1,2 @@
-# ImposterBot
-Discord bot to enhance your Among Us experience
+# ValPal
+Discord bot for Valorant stats

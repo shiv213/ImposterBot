@@ -1,0 +1,25 @@
+{
+  "name": "imposterbot",
+  "version": "1.0.0",
+  "description": "Discord bot to enhance your Among Us experience\n\n",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js test",
+    "start": "node index.js"
+  },
+  "author": "Shiv Trivedi",
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "download": "^8.0.0",
+    "eslint": "^7.5.0",
+    "express": "^4.17.1",
+    "http-server": "^0.12.3",
+    "moment": "^2.26.0",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}
