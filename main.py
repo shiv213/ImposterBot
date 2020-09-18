@@ -31,7 +31,11 @@ ejected = False
 hWnd = win32gui.FindWindow(0, "Among Us")
 pid = win32process.GetWindowThreadProcessId(hWnd)
 handle = pymem.Pymem()
-handle.open_process_from_id(pid[1])
+try:
+    handle.open_process_from_id(pid[1])
+except pymem.exception.CouldNotOpenProcess:
+    print("Among Us is not running!")
+    exit()
 
 list_of_modules = handle.list_modules()
 while list_of_modules is not None:
@@ -65,7 +69,6 @@ def pointer_loop():
         process.get_pointer(client_dll + 0x00DAC5B4, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xDB4]))
     raw_pointer2 = process.read(
         process.get_pointer(client_dll + 0x00DA1284, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xE6C]))
-    time.sleep(1)
 
 
 def changes_loop():
@@ -82,13 +85,14 @@ def changes_loop():
         previous_pointer2 = raw_pointer2
         current_state = raw_pointer2
 
-    if current_state == 4 and previous_state == 3:
+    if previous_state == 3 and current_state == 4:
         time.sleep(7)
         current_state = 0
 
 
 while True:
     pointer_loop()
+    time.sleep(1)
     changes_loop()
     # print("previous, current")
     # print(previous_pointer1, "       ", raw_pointer1)

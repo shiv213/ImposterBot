@@ -11,13 +11,20 @@ module.exports = {
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         message.channel.startTyping().then(r => {
             console.log(args[0])
-            fs.writeFile('amongusrole.txt', args[0], (err) => {
-                if (err) {
-                    message.channel.send(`Role ${args[0]} could not be saved: ${err}`);
-                }
+            // fs.writeFile('amongusrole.txt', args[0], (err) => {
+            //     if (err) {
+            //         message.channel.send(`Role ${args[0]} could not be saved: ${err}`);
+            //     }
+            //     message.channel.send(`Role ${args[0]} has been saved!`);
+            // })
+            try {
+                writeGuildData(message.guild.id, args[0]);
                 message.channel.send(`Role ${args[0]} has been saved!`);
-            })
-        })
+            } catch (err) {
+                message.channel.send(`Role ${args[0]} could not be saved: ${err}`);
+            }
+        });
         message.channel.stopTyping()
     },
-};
+}
+;

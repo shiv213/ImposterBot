@@ -9,6 +9,40 @@ const client = new Discord.Client();
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const firebase = require("firebase/app");
+require("firebase/database");
+
+const firebaseConfig = {
+    apiKey: process.env.apiKey,
+    authDomain: process.env.authDomain,
+    databaseURL: process.env.databaseURL,
+    projectId: process.env.projectId,
+    storageBucket: process.env.storageBucket,
+    messagingSenderId: process.env.messagingSenderId,
+    appId: process.env.appId,
+    measurementId: process.env.measurementId
+};
+
+firebase.initializeApp(firebaseConfig);
+let database = firebase.database();
+
+global.writeGuildData = function writeGuildData(guildId, role) {
+    database.ref('guilds/' + guildId).set({
+        role: role
+    });
+}
+
+global.getGuildData = function getGuildData(guildId) {
+    return database.ref('/guilds/' + guildId).once('value').then(function(snapshot) {
+        return snapshot.val().role || 'none';
+    });
+}
+
+// global.getGuildData = function getGuildData(guildId) {
+//     return database.ref('/guilds/' + guildId).once('value').then(function(snapshot) {
+//         return snapshot.val().voteState || 'none';
+//     });
+// }
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
