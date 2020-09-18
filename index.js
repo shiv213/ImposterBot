@@ -99,7 +99,6 @@ client.on('message', message => {
 });
 
 
-// client.login(token).catch(err => console.log(err));
 client.login(process.env.TOKEN).catch(err => console.log(err));
 const cliArgs = process.argv.slice(2);
 if (cliArgs[0] === "test") {
