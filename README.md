@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">An open source Discord bot to enhance your <a href="http://www.innersloth.com/gameAmongUs.php">Among Us</a> experience</h4>
+<h4 align="center">An open-source Discord bot to enhance your <a href="http://www.innersloth.com/gameAmongUs.php">Among Us</a> experience</h4>
 
 <p align="center">
   <a href="https://saythanks.io/to/shiv.v.trivedi%40gmail.com">
@@ -20,10 +20,9 @@
 <p align="center">
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download Game Listener</a> •
+  <a href="#download">Download</a> •
   <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#changelog">Changelog</a> •
+  <a href="#support">Support</a> •
   <a href="#license">License</a>
 </p>
 
