@@ -43,7 +43,7 @@
 
 To use this bot on your Discord server, you need invite using this link: 
 
-[Invite Imposter Bot](https://discord.com/api/oauth2/authorize?client_id=755510808397742171&permissions=0&scope=bot)
+[Invite Imposter Bot](https://discord.com/oauth2/authorize?client_id=755510808397742171&permissions=66583376&scope=bot)
 
 You will also need to download the latest version of [ImposterBot Among Us Game Listener](https://github.com/shiv213/ImposterBot/releases/latest)
 

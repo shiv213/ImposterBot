@@ -20,14 +20,13 @@ module.exports = {
             },
             "author": {
                 "name": "ImposterBot",
-                "url": "https://discord.com/api/oauth2/authorize?client_id=755510808397742171&permissions=0&scope=bot",
+                "url": "https://discord.com/oauth2/authorize?client_id=755510808397742171&permissions=66583376&scope=bot",
                 "icon_url": "https://i.imgur.com/TLMyjPM.png"
             },
             "fields": [{
                 "name": ":revolving_hearts: Made with love by @shiv213#7699",
                 "value": "ImposterBot#3716 © 2020"
-            }
-            ]
+            }]
         };
         const data = [];
         const {commands} = message.client;
