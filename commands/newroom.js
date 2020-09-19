@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 module.exports = {
     name: 'newgame',
     description: 'Announce Among Us game to the server.',
@@ -10,7 +8,6 @@ module.exports = {
     args: true,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         message.channel.startTyping()
-        // let amongusrole = fs.readFileSync('amongusrole.txt', 'utf8');
         getGuildData(message.guild.id).then(function (result) {
             let amongusrole = result;
             const newgameEmbed = new Discord.MessageEmbed()

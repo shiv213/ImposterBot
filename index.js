@@ -24,10 +24,10 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-let database = firebase.database();
+global.database = firebase.database();
 
 global.writeGuildData = function writeGuildData(guildId, role) {
-    database.ref('guilds/' + guildId).set({
+    database.ref('guilds/' + guildId).update({
         role: role
     });
 }
@@ -38,8 +38,8 @@ global.getGuildData = function getGuildData(guildId) {
     });
 }
 
-// global.getGuildData = function getGuildData(guildId) {
-//     return database.ref('/guilds/' + guildId).once('value').then(function(snapshot) {
+// global.getVoteState = function getGuildData(guildId) {
+//     return database.ref('/guilds/' + guildId).on('value').then(function(snapshot) {
 //         return snapshot.val().voteState || 'none';
 //     });
 // }
