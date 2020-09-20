@@ -3,7 +3,7 @@ gooey_root = os.path.dirname(gooey.__file__)
 gooey_languages = Tree(os.path.join(gooey_root, 'languages'), prefix = 'gooey/languages')
 gooey_images = Tree(os.path.join(gooey_root, 'images'), prefix = 'gooey/images')
 a = Analysis(['main.py'],
-             pathex=['c:\\Python27\\Scripts'],
+             pathex=['c:\\Python38\\Scripts'],
              hiddenimports=[],
              hookspath=None,
              runtime_hooks=None,
