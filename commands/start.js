@@ -12,7 +12,9 @@ module.exports = {
         if (message.member.voice.channel) {
             await message.member.voice.channel.join().then(connection => {
                 connection.voice.setSelfDeaf(true);
-            });
+            }).catch(e => {
+                message.channel.send("Error:" + e);
+            })
             let botVoiceConnection = message.guild.voice.channel;
             let members = botVoiceConnection.members;
             global.FBlistener = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
