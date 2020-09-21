@@ -8,7 +8,7 @@
 <h4 align="center">
 An open-source Discord bot to enhance your <a href="http://www.innersloth.com/gameAmongUs.php">Among Us</a> experience
 </h4>
-<h5>This program is in <u>beta</u>. I am working actively to resolve any and all issues! If you find any issues, please open and issue on this GitHub page!</h5>
+<h5 align="center">This program is in <u>beta</u>. I am working actively to resolve any and all issues! If you find any issues, please open an <a href="https://github.com/shiv213/ImposterBot/issues/new">issue</a> on this GitHub page!</h5>
 
 <p align="center">
   <a href="https://saythanks.io/to/shiv.v.trivedi%40gmail.com">

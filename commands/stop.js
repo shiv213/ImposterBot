@@ -16,13 +16,18 @@ module.exports = {
                 message.channel.send("Error: " + error);
             }
         }
-        if (message.member.voice.channel) {
-            let botVoiceConnection = message.guild.voice.channel;
-            let members = botVoiceConnection.members;
-            members.each(user => user.voice.setMute(false));
-            botVoiceConnection.leave();
-        } else {
+        if (message.guild.voice === undefined) {
+            message.channel.send("Not currently running.");
+        } else if (!message.member.voice.channel) {
             message.channel.send("Please join a voice channel first!");
+        } else {
+            let members = message.guild.voice.channel.members;
+            members.each(user => user.voice.setMute(false));
+            try {
+                message.guild.voice.channel.leave();
+            } catch (e) {
+                console.log(e);
+            }
         }
     },
 };
