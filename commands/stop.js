@@ -12,14 +12,15 @@ module.exports = {
         } else {
             let members = botVoiceConnection.members;
             members.each(user => user.voice.setMute(false));
-            botVoiceConnection.leave();
             if (global.FBlistener != null) {
                 try {
                     database.ref('/guilds/' + message.guild.id + '/voteState').off('value', FBlistener);
+                    global.FBlistener = null;
                 } catch (error) {
                     message.channel.send("Error!" + error);
                 }
             }
+            botVoiceConnection.leave();
         }
     },
 };
