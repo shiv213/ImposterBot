@@ -16,12 +16,14 @@ module.exports = {
                 .setAuthor('ImposterBot', 'https://i.imgur.com/TLMyjPM.png', 'https://github.com/shiv213/ImposterBot')
                 .setThumbnail('https://i.imgur.com/LHkwkNC.png')
                 .addFields(
-                    {name: `CODE: ${args[0]}`, value: `${amongusrole}`, inline: true},
+                    {name: "CODE: ", value: args[0], inline: true},
                 )
                 .setTimestamp()
                 .setFooter('Join now!');
             if (amongusrole === 'none') {
                 message.channel.send(`Among Us role has not been set! Set one using \`setamongusrole\``);
+            } else {
+                message.channel.send(`${amongusrole}`);
             }
             message.channel.send(newgameEmbed).then(r => message.channel.stopTyping());
         })

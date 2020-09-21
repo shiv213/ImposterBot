@@ -6,12 +6,11 @@ module.exports = {
     args: false,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         if (message.member.voice.channel) {
-            let clientVoiceConnection = message.guild.voice.channel;
-            let members = clientVoiceConnection.members;
-            members.each(user => console.log(user.voice.setMute(false)));
+            let botVoiceConnection = message.guild.voice.channel;
+            let members = botVoiceConnection.members;
+            members.each(user => user.voice.setMute(false)).catch(e=> {message.channel.send("Error " + e)});
         } else {
-            message.channel.startTyping();
-            message.channel.send("Please join a voice channel first!").then(r => message.channel.stopTyping());
+            message.channel.send("Please join a voice channel first!");
         }
     },
 };

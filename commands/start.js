@@ -12,7 +12,7 @@ module.exports = {
         if (message.member.voice.channel) {
             await message.member.voice.channel.join().then(connection => {
                 connection.voice.setSelfDeaf(true);
-                global.FBlistener = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
+                global.FBlistener[message.guild.id] = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
                     let botVoiceConnection = message.guild.voice.channel;
                     let members = botVoiceConnection.members;
                     let voteState = snapshot.val();
@@ -25,7 +25,7 @@ module.exports = {
             })
         } else {
             message.channel.send("Please join a voice channel first!");
-            global.FBlistener = null;
+            global.FBlistener[message.guild.id] = null;
         }
     },
 };

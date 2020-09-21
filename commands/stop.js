@@ -6,21 +6,25 @@ module.exports = {
     guildOnly: true,
     args: false,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
-        let botVoiceConnection = message.guild.voice.channel;
-        if (!botVoiceConnection) {
+        if (global.FBlistener[message.guild.id] === null) {
             message.channel.send("Not currently running.");
         } else {
-            let members = botVoiceConnection.members;
-            members.each(user => user.voice.setMute(false));
-            if (global.FBlistener != null) {
-                try {
-                    database.ref('/guilds/' + message.guild.id + '/voteState').off('value', FBlistener);
-                    global.FBlistener = null;
-                } catch (error) {
-                    message.channel.send("Error!" + error);
-                }
+            try {
+                database.ref('/guilds/' + message.guild.id + '/voteState').off('value', global.FBlistener[message.guild.id]);
+                global.FBlistener[message.guild.id] = null;
+            } catch (error) {
+                message.channel.send("Error: " + error);
             }
+        }
+        if (message.member.voice.channel) {
+            let botVoiceConnection = message.guild.voice.channel;
+            let members = botVoiceConnection.members;
+            members.each(user => user.voice.setMute(false)).catch(e => {
+                message.channel.send("Error " + e)
+            });
             botVoiceConnection.leave();
+        } else {
+            message.channel.send("Please join a voice channel first!");
         }
     },
 };
