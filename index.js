@@ -47,7 +47,7 @@ try {
             return snapshot.val().role || 'none';
         });
     }
-
+    global.FBlistener = {}
 // global.getVoteState = function getGuildData(guildId) {
 //     return database.ref('/guilds/' + guildId).on('value').then(function(snapshot) {
 //         return snapshot.val().voteState || 'none';
