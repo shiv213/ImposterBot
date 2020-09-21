@@ -1,0 +1,7 @@
+pywin32~=228
+Pymem~=1.3
+Pyrebase~=3.0.27
+ReadWriteMemory~=0.1.5
+Gooey~=1.0.4.0.0.0
+colored~=1.4.2
+cryptography~=3.1

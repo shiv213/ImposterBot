@@ -19,7 +19,7 @@ previous_state = 0
 ejected = False
 running = True
 handle = None
-key = open("main.key", "rb").read()
+key = b'rQeHwaPoZnAekIBi_QZmXVjHPCg93lqmdTyTMfTzG14='
 f = Fernet(key)
 decrypted_message = f.decrypt(
     b'gAAAAABfZ50dBZa8dTPZ2r1M2oBkSidfD6ddn9T27lKYd4KNwQF3-mCxzJOfDTCtFKdr6T2YOMWh'
@@ -93,7 +93,7 @@ def changes_loop():
                'menuTitle': 'About',
                'name': 'ImposterBot Among Us Game Listener',
                'description': 'Game listener to send Among Us game information to ImposterBot',
-               'version': '0.0.1',
+               'version': '0.0.2',
                'copyright': '2020',
                'website': 'https://github.com/shiv213/ImposterBot',
                'developer': 'https://shivvtrivedi.com/',
@@ -125,7 +125,7 @@ def main():
     print("If you have any questions or issues or would like to learn more, check it out here:")
     print(stylize("ImposterBot GitHub.", fg("blue") + attr("bold")))
     print(stylize("https://github.com/shiv213/ImposterBot", fg("blue")))
-    print(stylize("Made with ♥ by Shiv Trivedi.", fg("violet") + attr("bold")))
+    print(stylize("Made with <3 by Shiv Trivedi.", fg("violet") + attr("bold")))
     print(stylize("-----------------------------------------------------------------------------", attr("bold")))
 
     while running:
@@ -140,5 +140,5 @@ def main():
             db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
 
-# if __name__ == '__main__':
-main()
+if __name__ == '__main__':
+    main()

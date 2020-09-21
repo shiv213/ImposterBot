@@ -40,7 +40,7 @@
 Only one person in the game/voice channel needs to do the following:
 - Run the `.server` command on your Discord server to get your server id (this is unique per Discord server)
 - Launch the Among Us game (this needs to be open for the next step to work)
-- Run the `ImposterBot Among Us Game Listener.exe` (instructions on where to find this below)
+- Run the `ImposterBot Among Us Game Listener.py` file (instructions on where to find this below)
 - Input your server id and press `Start`
 - Get into a game of Among Us, and run the `.start` command in your Discord server once the game starts
     - Note: for the time being, everyone will be muted in the lobbies (this will be changed shortly)
@@ -53,6 +53,10 @@ To use this bot on your Discord server, you need invite using this link:
 [Invite Imposter Bot](https://discord.com/oauth2/authorize?client_id=755510808397742171&permissions=66583376&scope=bot)
 
 You will also need to download the latest version of [ImposterBot Among Us Game Listener](https://github.com/shiv213/ImposterBot/releases/latest)
+
+##### In order to run the `ImposterBot Among Us Game Listener.py`:
+-   Make sure you have Python 3 installed! 
+-   Run `python setup.py install`
 
 ## Emailware
 

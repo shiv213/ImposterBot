@@ -8,6 +8,7 @@ firebase-debug.log*
 firebase-debug.*.log*
 
 # Custom
+__pycache__/
 dist/
 build/
 *.exe
