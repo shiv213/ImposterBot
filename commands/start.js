@@ -13,16 +13,16 @@ module.exports = {
             await message.member.voice.channel.join().then(connection => {
                 connection.voice.setSelfDeaf(true);
             });
+            let botVoiceConnection = message.guild.voice.channel;
+            let members = botVoiceConnection.members;
+            global.FBlistener = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
+                let voteState = snapshot.val();
+                if (botVoiceConnection) {
+                    members.each(user => user.voice.setMute(voteState === 0));
+                }
+            });
         } else {
             message.channel.send("Please join a voice channel first!");
         }
-        let botVoiceConnection = message.guild.voice.channel;
-        let members = botVoiceConnection.members;
-        global.FBlistener = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
-            let voteState = snapshot.val();
-            if (botVoiceConnection) {
-                members.each(user => user.voice.setMute(voteState === 0));
-            }
-        });
     },
 };
