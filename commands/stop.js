@@ -19,9 +19,7 @@ module.exports = {
         if (message.member.voice.channel) {
             let botVoiceConnection = message.guild.voice.channel;
             let members = botVoiceConnection.members;
-            members.each(user => user.voice.setMute(false)).catch(e => {
-                message.channel.send("Error " + e)
-            });
+            members.each(user => user.voice.setMute(false));
             botVoiceConnection.leave();
         } else {
             message.channel.send("Please join a voice channel first!");
