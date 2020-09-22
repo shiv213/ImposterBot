@@ -5,9 +5,11 @@ module.exports = {
     cooldown: 5,
     guildOnly: true,
     args: false,
-    execute(message, args, {Canvas: Canvas, Discord: Discord}) {
-        if (global.FBlistener[message.guild.id] === null) {
+    async execute(message, args, {Canvas: Canvas, Discord: Discord}) {
+        if (global.FBlistener[message.guild.id] === null || message.guild.voice === undefined) {
             message.channel.send("Not currently running.");
+        } else if (!message.member.voice.channel) {
+            message.channel.send("Please join a voice channel first!");
         } else {
             try {
                 database.ref('/guilds/' + message.guild.id + '/voteState').off('value', global.FBlistener[message.guild.id]);
@@ -15,19 +17,11 @@ module.exports = {
             } catch (error) {
                 message.channel.send("Error: " + error);
             }
-        }
-        if (message.guild.voice === undefined) {
-            message.channel.send("Not currently running.");
-        } else if (!message.member.voice.channel) {
-            message.channel.send("Please join a voice channel first!");
-        } else {
             let members = message.guild.voice.channel.members;
-            members.each(user => user.voice.setMute(false));
-            try {
-                message.guild.voice.channel.leave();
-            } catch (e) {
-                console.log(e);
-            }
+            members.each(async function (user) {
+                await user.voice.setMute(false);
+            });
+            await message.guild.voice.channel.leave();
         }
     },
 };
