@@ -31,8 +31,6 @@ Sentry.init({
 });
 
 try {
-
-
     firebase.initializeApp(firebaseConfig);
     global.database = firebase.database();
 
