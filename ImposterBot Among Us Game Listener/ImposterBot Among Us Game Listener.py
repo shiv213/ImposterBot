@@ -50,16 +50,20 @@ except ReadWriteMemoryError as error:
 process.open()
 
 
+# TODO Check if in game or in lobby
+# TODO Save server id's to appdata
+# TODO Get room code to send to db
+# TODO Only mute players
+
+
+# Voting States:
 # -----------
+# 0 - Not in voting
 # 1 - Discussion/NotVoted
 # 2 - Discussion/Voted // only applies for alive player
 # 3 - Results
 # 4 - Proceeding // looks like this doesn't happen in custom lobbies
 # -----------
-# TODO Check if in game or in lobby
-# TODO Save server id's to appdata
-# TODO Get room code to send to db
-# TODO Only mute players
 
 
 def pointer_loop():
