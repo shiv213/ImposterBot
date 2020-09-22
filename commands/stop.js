@@ -22,7 +22,7 @@ module.exports = {
             message.channel.send("Please join a voice channel first!");
         } else {
             let members = message.guild.voice.channel.members;
-            members.each(user => user.voice.setSelfMute(false));
+            members.each(user => user.voice.setMute(false));
             try {
                 message.guild.voice.channel.leave();
             } catch (e) {

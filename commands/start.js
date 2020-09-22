@@ -18,7 +18,7 @@ module.exports = {
                         let members = botVoiceConnection.members;
                         let voteState = snapshot.val();
                         if (botVoiceConnection) {
-                            members.each(user => user.voice.setSelfMute(voteState === 0).catch(e => {
+                            members.each(user => user.voice.setMute(voteState === 0).catch(e => {
                                 console.log(e);
                             }));
                         }
