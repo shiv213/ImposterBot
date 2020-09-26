@@ -7,16 +7,7 @@ module.exports = {
     guildOnly: true,
     args: true,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
-        message.channel.startTyping().then(r => {
-            console.log(args[0])
-            try {
-                writeGuildData(message.guild.id, args[0]);
-                message.channel.send(`Role ${args[0]} has been saved!`);
-            } catch (err) {
-                message.channel.send(`Role ${args[0]} could not be saved: ${err}`);
-            }
-        });
-        message.channel.stopTyping()
+        message.channel.send("ImposterBot is currently down, please check back soon!");
     },
 }
 ;
