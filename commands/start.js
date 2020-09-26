@@ -7,21 +7,18 @@ module.exports = {
     args: false,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         if (message.member.voice.channel) {
-            if (global.FBlistener[message.guild.id] !== undefined) {
-                message.channel.send("Already running.");
-            } else {
-                // TODO listen to who joins the channel and (un)mute
-                global.FBlistener[message.guild.id] = database.ref('/guilds/' + message.guild.id + '/voteState').on('value', function (snapshot) {
-                    let voiceChannel = message.member.voice.channel;
-                    let voteState = snapshot.val();
-                    voiceChannel.members.each(async user => await user.voice.setMute(voteState === 0).catch(e => {
-                        console.log(e);
-                    }));
-                });
+            for (let game = 0; game < database.length; game++) {
+                if (database[game].serverID === message.guild.id && database[game].vcID === message.member.voice.id) {
+                    if(database[game].started) {
+                        message.channel.send("Already running.");
+                    } else {
+                        database[game].started = true;
+                        database[game].users = message.member.voice.channel.members;
+                    }
+                }
             }
         } else {
             message.channel.send("Please join a voice channel first!");
-            global.FBlistener[message.guild.id] = null;
         }
     },
 };

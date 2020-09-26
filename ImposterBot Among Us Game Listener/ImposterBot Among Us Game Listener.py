@@ -1,12 +1,21 @@
 from ReadWriteMemory import ReadWriteMemory
 from ReadWriteMemory import ReadWriteMemoryError
 import pymem
-import pyrebase
 from gooey import Gooey, GooeyParser
 import time
 from colored import stylize, attr, fg
 import logging
-from cryptography.fernet import Fernet
+import requests
+from enum import Enum
+
+
+class VoteState(Enum):
+    NOT_VOTING = 0
+    DISCUSSION_VOTED = 1
+    DISCUSSION_NOT_VOTED = 2
+    RESULTS = 3
+    PROCEEDING = 4
+
 
 process = None
 raw_pointer1 = None
@@ -15,23 +24,11 @@ previous_pointer1 = None
 previous_pointer2 = None
 did_vote_run = None
 current_state = None
-previous_state = 0
+previous_state = VoteState(0)
 ejected = False
 running = True
 handle = None
-key = b'rQeHwaPoZnAekIBi_QZmXVjHPCg93lqmdTyTMfTzG14='
-f = Fernet(key)
-decrypted_message = f.decrypt(
-    b'gAAAAABfZ50dBZa8dTPZ2r1M2oBkSidfD6ddn9T27lKYd4KNwQF3-mCxzJOfDTCtFKdr6T2YOMWh'
-    b'-ucwGeajeJJR1WWXiM1IEkKUGj1IDHTlQexqbYUeUn-XWv5G-xFgq4k8Q3QhSUyF')
-config = {
-    "apiKey": decrypted_message.decode(),
-    "authDomain": "imposter-bot.firebaseapp.com",
-    "databaseURL": "https://imposter-bot.firebaseio.com",
-    "storageBucket": "imposter-bot.appspot.com"
-}
-firebase = pyrebase.initialize_app(config)
-db = firebase.database()
+pushData = {}
 
 logging.disable(40)
 try:
@@ -68,10 +65,10 @@ process.open()
 
 def pointer_loop():
     global raw_pointer1, raw_pointer2
-    raw_pointer1 = process.read(
-        process.get_pointer(client_dll + 0x00DAC5B4, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xDB4]))
-    raw_pointer2 = process.read(
-        process.get_pointer(client_dll + 0x00DA1284, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xE6C]))
+    raw_pointer1 = VoteState(process.read(
+        process.get_pointer(client_dll + 0x00DAC5B4, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xDB4])))
+    raw_pointer2 = VoteState(process.read(
+        process.get_pointer(client_dll + 0x00DA1284, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xE6C])))
 
 
 def changes_loop():
@@ -84,8 +81,8 @@ def changes_loop():
     if previous_pointer2 != raw_pointer2:
         previous_pointer2 = raw_pointer2
         current_state = raw_pointer2
-    if current_state == 3 or current_state == 4:
-        current_state = 0
+    if current_state == VoteState(3) or current_state == VoteState(4):
+        current_state = VoteState(0)
         time.sleep(10)
 
 
@@ -137,11 +134,14 @@ def main():
         time.sleep(1)
         changes_loop()
         if previous_state != current_state:
-            if current_state == 0:
+            if current_state == VoteState(0):
                 print(stylize("MUTED", fg("red") + attr("bold")))
             else:
                 print(stylize("UNMUTED", fg("green") + attr("bold")))
-            db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
+
+            response = requests.post('http://127.0.0.1/push', json=pushData)
+            print("Status code: ", response.status_code)
+            # db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
 
 if __name__ == '__main__':

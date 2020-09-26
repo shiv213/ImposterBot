@@ -6,7 +6,7 @@ module.exports = {
     args: false,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         if (message.member.voice.channel) {
-            message.member.voice.channel.members.each(user => user.voice.setMute(true));
+            message.member.voice.channel.members.each(async user => await user.voice.setMute(true));
         } else {
             message.channel.send("Please join a voice channel first!");
         }

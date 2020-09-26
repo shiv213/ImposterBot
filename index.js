@@ -2,7 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const Canvas = require("canvas");
 require('dotenv').config();
-const fetch = require("node-fetch")
+const fetch = require("node-fetch");
 const request = require('request');
 const {prefix} = require('./config.json');
 const client = new Discord.Client();
@@ -10,29 +10,75 @@ client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const Sentry = require("@sentry/node");
-const Tracing = require("@sentry/tracing");
-const firebase = require("firebase/app");
-require("firebase/database");
-
-const firebaseConfig = {
-    apiKey: process.env.apiKey,
-    authDomain: process.env.authDomain,
-    databaseURL: process.env.databaseURL,
-    projectId: process.env.projectId,
-    storageBucket: process.env.storageBucket,
-    messagingSenderId: process.env.messagingSenderId,
-    appId: process.env.appId,
-    measurementId: process.env.measurementId
-};
+const express = require('express')
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 Sentry.init({
-    dsn: "https://1bc7eb6261a2469c9c800ee4c538f770@o450577.ingest.sentry.io/5435161",
+    // dsn: "https://1bc7eb6261a2469c9c800ee4c538f770@o450577.ingest.sentry.io/5435161",
     tracesSampleRate: 1.0,
 });
 
 try {
-    firebase.initializeApp(firebaseConfig);
-    global.database = firebase.database();
+    const app = express();
+    const port = 80;
+    app.use(cors());
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.json());
+
+    global.database = {};
+
+    app.get('/', (req, res) => {
+        res.send(`ImposterBot listening on ${port}`);
+    });
+
+    app.get('/database', (req, res) => {
+        return res.json(database);
+        // return res.send(Object.values(database));
+    });
+
+    app.post('/push', (req, res) => {
+        const reqData = req.body;
+        let gameID = reqData.serverID + reqData.vcID;
+        database[gameID] = reqData;
+        res.send('Data has been updated in the database');
+        updateGameState(gameID);
+    });
+
+    function updateGameState(gameID) {
+        console.log(database[gameID].serverID);
+        client.guilds.fetch(database[gameID].serverID).then(guild => {
+            console.log(guild.name);
+
+        }).catch(console.error);
+        // .then(guild => {
+        //   console.log(guild.channels.cache);
+        // }).catch(console.error);
+        // if (message.member.voice.channel) {
+        //     message.member.voice.channel.members.each(async user => await user.voice.setMute(database[gameID].gameState === "voting").catch(e => {
+        //         console.log(e);
+        //     }));
+        // } else {
+        //     message.channel.send("Please join a voice channel first!");
+        // }
+    }
+
+    // global.startGame = function(guildID, voicechannelID) {
+    //     for (let game = 0; game < database.length; game++) {
+    //         if (database[game].serverID === guildID && database[game].vcID === voicechannelID) {
+    //             database[game].started = true;
+    //         }
+    //     }
+    // }
+    // global.stopGame = function(guildID, voicechannelID) {
+    //     for (let game = 0; game < database.length; game++) {
+    //         if (database[game].serverID === guildID && database[game].vcID === voicechannelID) {
+    //             database[game].started = false;
+    //         }
+    //     }
+    // }
+
+    app.listen(port, () => console.log(`ImposterBot listening on port ${port}!`));
 
     global.writeGuildData = function writeGuildData(guildId, role) {
         database.ref('guilds/' + guildId).update({
@@ -45,12 +91,8 @@ try {
             return snapshot.val().role || 'none';
         });
     }
+
     global.FBlistener = {}
-// global.getVoteState = function getGuildData(guildId) {
-//     return database.ref('/guilds/' + guildId).on('value').then(function(snapshot) {
-//         return snapshot.val().voteState || 'none';
-//     });
-// }
 
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
