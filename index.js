@@ -40,13 +40,16 @@ try {
     app.post('/push', (req, res) => {
         const reqData = req.body;
         let gameID = reqData.serverID + reqData.vcID;
-        database[gameID] = reqData;
+        if (database[gameID] === undefined) {database[gameID] = {};};
+        database[gameID].serverID = reqData.serverID;
+        database[gameID].vcID = reqData.vcID;
+        database[gameID].gameState = reqData.gameState;
         // console.log(reqData);
         res.send('Data has been updated in the database');
         updateGameState(gameID);
     });
 
-    function updateGameState(gameID) {
+    global.updateGameState = function(gameID) {
         // console.log(database[gameID].serverID);
         if (database[gameID].started !== undefined && database[gameID].started) {
             client.guilds.fetch(database[gameID].serverID).then(guild => {

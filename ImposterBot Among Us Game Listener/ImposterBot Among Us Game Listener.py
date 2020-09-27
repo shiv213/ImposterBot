@@ -165,10 +165,10 @@ def main():
                 print(stylize("UNMUTED", fg("green") + attr("bold")))
             # print(pushData)
             response = requests.post('https://imposter-bot.herokuapp.com/push', json=pushData)
+            # response = requests.post('http://127.0.0.1/push', json=pushData)
             if response.status_code != 200:
                 print("Connection error!")
             # print("Status code: ", response.status_code)
-            # db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
 
 if __name__ == '__main__':
