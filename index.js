@@ -21,7 +21,7 @@ Sentry.init({
 
 try {
     const app = express();
-    const port = 80;
+    const port = process.env.PORT || 3000;
     app.use(cors());
     app.use(bodyParser.urlencoded({extended: false}));
     app.use(bodyParser.json());
