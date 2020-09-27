@@ -6,14 +6,14 @@ module.exports = {
     guildOnly: true,
     args: false,
     execute(message) {
+
         if (message.member.voice.channel) {
             for (let game = 0; game < database.length; game++) {
                 if (database[game].serverID === message.guild.id && database[game].vcID === message.member.voice.id) {
                     if (database[game].started) {
-                        message.channel.send("Already running.");
+                        database[game].started = false;
                     } else {
-                        database[game].started = true;
-                        database[game].users = message.member.voice.channel.members;
+                        message.channel.send("Already running.");
                     }
                 }
             }

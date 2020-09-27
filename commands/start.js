@@ -10,9 +10,10 @@ module.exports = {
             for (let game = 0; game < database.length; game++) {
                 if (database[game].serverID === message.guild.id && database[game].vcID === message.member.voice.id) {
                     if (database[game].started) {
-                        database[game].started = false;
-                    } else {
                         message.channel.send("Already running.");
+                    } else {
+                        database[game].started = true;
+                        database[game].users = message.member.voice.channel.members;
                     }
                 }
             }

@@ -48,7 +48,7 @@ try {
 
     function updateGameState(gameID) {
         // console.log(database[gameID].serverID);
-        if (database[gameID].started) {
+        if (typeof database[gameID].started !== 'undefined' && database[gameID].started) {
             client.guilds.fetch(database[gameID].serverID).then(guild => {
                 // console.log(guild.name);
                 let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
