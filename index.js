@@ -49,7 +49,15 @@ try {
         console.log(database[gameID].serverID);
         client.guilds.fetch(database[gameID].serverID).then(guild => {
             console.log(guild.name);
-
+            let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
+            if (channel.members.size !== 0) {
+                channel.members.each(async member => {
+                    // TODO Add checking for colors
+                    // If game is in discussion stage, unmute:
+                    let muteState = database[gameID].gameState.toLowerCase() !== "discussion";
+                    await member.voice.setMute(muteState).catch(err => console.log(err));
+                });
+            }
         }).catch(console.error);
         // .then(guild => {
         //   console.log(guild.channels.cache);
@@ -63,36 +71,7 @@ try {
         // }
     }
 
-    // global.startGame = function(guildID, voicechannelID) {
-    //     for (let game = 0; game < database.length; game++) {
-    //         if (database[game].serverID === guildID && database[game].vcID === voicechannelID) {
-    //             database[game].started = true;
-    //         }
-    //     }
-    // }
-    // global.stopGame = function(guildID, voicechannelID) {
-    //     for (let game = 0; game < database.length; game++) {
-    //         if (database[game].serverID === guildID && database[game].vcID === voicechannelID) {
-    //             database[game].started = false;
-    //         }
-    //     }
-    // }
-
     app.listen(port, () => console.log(`ImposterBot listening on port ${port}!`));
-
-    global.writeGuildData = function writeGuildData(guildId, role) {
-        database.ref('guilds/' + guildId).update({
-            role: role
-        });
-    }
-
-    global.getGuildData = function getGuildData(guildId) {
-        return database.ref('/guilds/' + guildId).once('value').then(function (snapshot) {
-            return snapshot.val().role || 'none';
-        });
-    }
-
-    global.FBlistener = {}
 
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
@@ -115,7 +94,7 @@ try {
             .addFields(
                 {name: 'GitHub Page', value: '[ImposterBot](https://github.com/shiv213/ImposterBot)', inline: true},
             );
-        client.users.cache.get(guild.ownerID).send(DMEmbed);
+        client.users.cache.get(guild.ownerID).send(DMEmbed).catch(e => console.log(e));
         client.user.setPresence({
             activity: {name: `.help | Serving ${client.guilds.cache.size} servers`},
             status: 'online'

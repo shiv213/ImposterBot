@@ -5,8 +5,9 @@ module.exports = {
     guildOnly: true,
     args: false,
     execute(message, args, {Canvas: Canvas, Discord: Discord}) {
-        if (message.member.voice.channel) {
-            message.member.voice.channel.members.each(async user => await user.voice.setMute(false));
+        let channel = message.member.voice.channel;
+        if (channel) {
+            channel.members.each(async user => await user.voice.setMute(false).catch(err => console.log(err)));
         } else {
             message.channel.send("Please join a voice channel first!");
         }

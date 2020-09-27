@@ -10,11 +10,11 @@ from enum import Enum
 
 
 class VoteState(Enum):
-    NOT_VOTING = 0
-    DISCUSSION_VOTED = 1
-    DISCUSSION_NOT_VOTED = 2
-    RESULTS = 3
-    PROCEEDING = 4
+    GAME = 0
+    DISCUSSION = 1
+    DISCUSSION = 2
+    DISCUSSION = 3
+    DISCUSSION = 4
 
 
 process = None
@@ -94,7 +94,7 @@ def changes_loop():
                'menuTitle': 'About',
                'name': 'ImposterBot Among Us Game Listener',
                'description': 'Game listener to send Among Us game information to ImposterBot',
-               'version': '0.0.2',
+               'version': '0.0.3',
                'copyright': '2020',
                'website': 'https://github.com/shiv213/ImposterBot',
                'developer': 'https://shivvtrivedi.com/',
@@ -115,7 +115,13 @@ def main():
     parser.add_argument(
         'guild_id',
         metavar='Server ID',
-        help='Can be found using the .server command!'
+        help='Can be found using the .info command!'
+    )
+
+    parser.add_argument(
+        'vc_id',
+        metavar='Voice Channel ID',
+        help='Can be found using the .info command!'
     )
 
     args = parser.parse_args()
@@ -134,12 +140,30 @@ def main():
         time.sleep(1)
         changes_loop()
         if previous_state != current_state:
+            pushData["serverID"] = args.guild_id
+            pushData["vcID"] = args.vc_id
+            pushData["gameState"] = current_state.name
+            # pushData["roomCode"] = "TESTER"
+            # pushData["players"] = {}
+            # pushData["players"]["red"] = "alive"
+            # pushData["players"]["blue"] = "alive"
+            # pushData["players"]["green"] = "alive"
+            # pushData["players"]["pink"] = "alive"
+            # pushData["players"]["orange"] = "alive"
+            # pushData["players"]["yellow"] = "alive"
+            # pushData["players"]["black"] = "alive"
+            # pushData["players"]["white"] = "alive"
+            # pushData["players"]["purple"] = "alive"
+            # pushData["players"]["brown"] = "alive"
+            # pushData["players"]["cyan"] = "alive"
+            # pushData["players"]["lime"] = "alive"
+
             if current_state == VoteState(0):
                 print(stylize("MUTED", fg("red") + attr("bold")))
             else:
                 print(stylize("UNMUTED", fg("green") + attr("bold")))
 
-            response = requests.post('http://127.0.0.1/push', json=pushData)
+            response = requests.post('https://imposter-bot.herokuapp.com/push', json=pushData)
             print("Status code: ", response.status_code)
             # db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
