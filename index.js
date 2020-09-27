@@ -15,7 +15,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 Sentry.init({
-    // dsn: "https://1bc7eb6261a2469c9c800ee4c538f770@o450577.ingest.sentry.io/5435161",
+    dsn: "https://1bc7eb6261a2469c9c800ee4c538f770@o450577.ingest.sentry.io/5435161",
     tracesSampleRate: 1.0,
 });
 
@@ -41,16 +41,17 @@ try {
         const reqData = req.body;
         let gameID = reqData.serverID + reqData.vcID;
         database[gameID] = reqData;
+        // console.log(reqData);
         res.send('Data has been updated in the database');
         updateGameState(gameID);
     });
 
     function updateGameState(gameID) {
-        console.log(database[gameID].serverID);
+        // console.log(database[gameID].serverID);
         client.guilds.fetch(database[gameID].serverID).then(guild => {
-            console.log(guild.name);
+            // console.log(guild.name);
             let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
-            if (channel.members.size !== 0) {
+            if (channel === undefined || channel.members.size !== 0) {
                 channel.members.each(async member => {
                     // TODO Add checking for colors
                     // If game is in discussion stage, unmute:
@@ -59,16 +60,6 @@ try {
                 });
             }
         }).catch(console.error);
-        // .then(guild => {
-        //   console.log(guild.channels.cache);
-        // }).catch(console.error);
-        // if (message.member.voice.channel) {
-        //     message.member.voice.channel.members.each(async user => await user.voice.setMute(database[gameID].gameState === "voting").catch(e => {
-        //         console.log(e);
-        //     }));
-        // } else {
-        //     message.channel.send("Please join a voice channel first!");
-        // }
     }
 
     app.listen(port, () => console.log(`ImposterBot listening on port ${port}!`));

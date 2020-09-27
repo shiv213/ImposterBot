@@ -1,6 +1,0 @@
-README.md
-setup.py
-ImposterBot.egg-info/PKG-INFO
-ImposterBot.egg-info/SOURCES.txt
-ImposterBot.egg-info/dependency_links.txt
-ImposterBot.egg-info/top_level.txt

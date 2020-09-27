@@ -12,9 +12,9 @@ from enum import Enum
 class VoteState(Enum):
     GAME = 0
     DISCUSSION = 1
-    DISCUSSION = 2
-    DISCUSSION = 3
-    DISCUSSION = 4
+    VOTED = 2
+    ALL_VOTED = 3
+    PROCEEDING = 4
 
 
 process = None
@@ -142,7 +142,6 @@ def main():
         if previous_state != current_state:
             pushData["serverID"] = args.guild_id
             pushData["vcID"] = args.vc_id
-            pushData["gameState"] = current_state.name
             # pushData["roomCode"] = "TESTER"
             # pushData["players"] = {}
             # pushData["players"]["red"] = "alive"
@@ -159,12 +158,16 @@ def main():
             # pushData["players"]["lime"] = "alive"
 
             if current_state == VoteState(0):
+                pushData["gameState"] = "game"
                 print(stylize("MUTED", fg("red") + attr("bold")))
             else:
+                pushData["gameState"] = "discussion"
                 print(stylize("UNMUTED", fg("green") + attr("bold")))
-
+            # print(pushData)
             response = requests.post('https://imposter-bot.herokuapp.com/push', json=pushData)
-            print("Status code: ", response.status_code)
+            if response.status_code != 200:
+                print("Connection error!")
+            # print("Status code: ", response.status_code)
             # db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
 
