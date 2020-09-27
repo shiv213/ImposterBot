@@ -15,6 +15,11 @@ module.exports = {
                         database[game].started = true;
                         database[game].users = message.member.voice.channel.members;
                     }
+                } else {
+                    let id = message.guild.id.toString() + message.member.voice.id.toString();
+                    database[id] = {};
+                    database[id].started = true;
+                    database[id].users = message.member.voice.channel.members;
                 }
             }
         } else {
