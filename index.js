@@ -48,18 +48,20 @@ try {
 
     function updateGameState(gameID) {
         // console.log(database[gameID].serverID);
-        client.guilds.fetch(database[gameID].serverID).then(guild => {
-            // console.log(guild.name);
-            let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
-            if (channel === undefined || channel.members.size !== 0) {
-                channel.members.each(async member => {
-                    // TODO Add checking for colors
-                    // If game is in discussion stage, unmute:
-                    let muteState = database[gameID].gameState.toLowerCase() !== "discussion";
-                    await member.voice.setMute(muteState).catch(err => console.log(err));
-                });
-            }
-        }).catch(console.error);
+        if (database[gameID].started) {
+            client.guilds.fetch(database[gameID].serverID).then(guild => {
+                // console.log(guild.name);
+                let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
+                if (channel === undefined || channel.members.size !== 0) {
+                    channel.members.each(async member => {
+                        // TODO Add checking for colors
+                        // If game is in discussion stage, unmute:
+                        let muteState = database[gameID].gameState.toLowerCase() !== "discussion";
+                        await member.voice.setMute(muteState).catch(err => console.log(err));
+                    });
+                }
+            }).catch(console.error);
+        }
     }
 
     app.listen(port, () => console.log(`ImposterBot listening on port ${port}!`));
