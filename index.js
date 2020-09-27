@@ -2,7 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const Canvas = require("canvas");
 require('dotenv').config();
-const fetch = require("node-fetch")
+const fetch = require("node-fetch");
 const request = require('request');
 const {prefix} = require('./config.json');
 const client = new Discord.Client();
@@ -10,20 +10,9 @@ client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const Sentry = require("@sentry/node");
-const Tracing = require("@sentry/tracing");
-const firebase = require("firebase/app");
-require("firebase/database");
-
-const firebaseConfig = {
-    apiKey: process.env.apiKey,
-    authDomain: process.env.authDomain,
-    databaseURL: process.env.databaseURL,
-    projectId: process.env.projectId,
-    storageBucket: process.env.storageBucket,
-    messagingSenderId: process.env.messagingSenderId,
-    appId: process.env.appId,
-    measurementId: process.env.measurementId
-};
+const express = require('express')
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
 Sentry.init({
     dsn: "https://1bc7eb6261a2469c9c800ee4c538f770@o450577.ingest.sentry.io/5435161",
@@ -31,28 +20,49 @@ Sentry.init({
 });
 
 try {
+    const app = express();
+    const port = 80;
+    app.use(cors());
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.json());
 
+    global.database = {};
 
-    firebase.initializeApp(firebaseConfig);
-    global.database = firebase.database();
+    app.get('/', (req, res) => {
+        res.send(`ImposterBot listening on ${port}`);
+    });
 
-    global.writeGuildData = function writeGuildData(guildId, role) {
-        database.ref('guilds/' + guildId).update({
-            role: role
-        });
+    app.get('/database', (req, res) => {
+        return res.json(database);
+        // return res.send(Object.values(database));
+    });
+
+    app.post('/push', (req, res) => {
+        const reqData = req.body;
+        let gameID = reqData.serverID + reqData.vcID;
+        database[gameID] = reqData;
+        // console.log(reqData);
+        res.send('Data has been updated in the database');
+        updateGameState(gameID);
+    });
+
+    function updateGameState(gameID) {
+        // console.log(database[gameID].serverID);
+        client.guilds.fetch(database[gameID].serverID).then(guild => {
+            // console.log(guild.name);
+            let channel = guild.channels.cache.filter(channel => channel.id === database[gameID].vcID).first();
+            if (channel === undefined || channel.members.size !== 0) {
+                channel.members.each(async member => {
+                    // TODO Add checking for colors
+                    // If game is in discussion stage, unmute:
+                    let muteState = database[gameID].gameState.toLowerCase() !== "discussion";
+                    await member.voice.setMute(muteState).catch(err => console.log(err));
+                });
+            }
+        }).catch(console.error);
     }
 
-    global.getGuildData = function getGuildData(guildId) {
-        return database.ref('/guilds/' + guildId).once('value').then(function (snapshot) {
-            return snapshot.val().role || 'none';
-        });
-    }
-    global.FBlistener = {}
-// global.getVoteState = function getGuildData(guildId) {
-//     return database.ref('/guilds/' + guildId).on('value').then(function(snapshot) {
-//         return snapshot.val().voteState || 'none';
-//     });
-// }
+    app.listen(port, () => console.log(`ImposterBot listening on port ${port}!`));
 
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
@@ -75,7 +85,7 @@ try {
             .addFields(
                 {name: 'GitHub Page', value: '[ImposterBot](https://github.com/shiv213/ImposterBot)', inline: true},
             );
-        client.users.cache.get(guild.ownerID).send(DMEmbed);
+        client.users.cache.get(guild.ownerID).send(DMEmbed).catch(e => console.log(e));
         client.user.setPresence({
             activity: {name: `.help | Serving ${client.guilds.cache.size} servers`},
             status: 'online'

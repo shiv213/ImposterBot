@@ -39,13 +39,13 @@ An open-source Discord bot to enhance your <a href="http://www.innersloth.com/ga
     - While you play Among Us, the Game Listener Executable will read Among Us game data and push it to the database   
 
 ## How To Use
-Only one person in the game/voice channel needs to do the following:
-- Run the `.server` command on your Discord server to get your server id (this is unique per Discord server)
-- Launch the Among Us game (this needs to be open for the next step to work)
+One person in the game who is **in the voice channel** needs to do the following:
+- Run the `.info` command on your Discord server to get your server ID and voice channel ID (this is unique per Discord server)
+- Launch the Among Us game (this needs to be open before the next step)
 - Run the `ImposterBot Among Us Game Listener.py` file (instructions on where to find this below)
-- Input your server id and press `Start`
+- Input your server ID and voice channel ID and press `Start`
 - Get into a game of Among Us, and run the `.start` command in your Discord server once the game starts
-    - Note: for the time being, everyone will be muted in the lobbies (this will be changed shortly)
+    - Note: for the time being, everyone will be muted in the lobbies as well as in the game (this will be changed shortly)
 - Once you're done with your game, run the `.stop` command in your Discord server
 
 ## Download

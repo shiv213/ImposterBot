@@ -1,12 +1,21 @@
 from ReadWriteMemory import ReadWriteMemory
 from ReadWriteMemory import ReadWriteMemoryError
 import pymem
-import pyrebase
 from gooey import Gooey, GooeyParser
 import time
 from colored import stylize, attr, fg
 import logging
-from cryptography.fernet import Fernet
+import requests
+from enum import Enum
+
+
+class VoteState(Enum):
+    GAME = 0
+    DISCUSSION = 1
+    VOTED = 2
+    ALL_VOTED = 3
+    PROCEEDING = 4
+
 
 process = None
 raw_pointer1 = None
@@ -15,23 +24,11 @@ previous_pointer1 = None
 previous_pointer2 = None
 did_vote_run = None
 current_state = None
-previous_state = 0
+previous_state = VoteState(0)
 ejected = False
 running = True
 handle = None
-key = b'rQeHwaPoZnAekIBi_QZmXVjHPCg93lqmdTyTMfTzG14='
-f = Fernet(key)
-decrypted_message = f.decrypt(
-    b'gAAAAABfZ50dBZa8dTPZ2r1M2oBkSidfD6ddn9T27lKYd4KNwQF3-mCxzJOfDTCtFKdr6T2YOMWh'
-    b'-ucwGeajeJJR1WWXiM1IEkKUGj1IDHTlQexqbYUeUn-XWv5G-xFgq4k8Q3QhSUyF')
-config = {
-    "apiKey": decrypted_message.decode(),
-    "authDomain": "imposter-bot.firebaseapp.com",
-    "databaseURL": "https://imposter-bot.firebaseio.com",
-    "storageBucket": "imposter-bot.appspot.com"
-}
-firebase = pyrebase.initialize_app(config)
-db = firebase.database()
+pushData = {}
 
 logging.disable(40)
 try:
@@ -68,10 +65,10 @@ process.open()
 
 def pointer_loop():
     global raw_pointer1, raw_pointer2
-    raw_pointer1 = process.read(
-        process.get_pointer(client_dll + 0x00DAC5B4, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xDB4]))
-    raw_pointer2 = process.read(
-        process.get_pointer(client_dll + 0x00DA1284, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xE6C]))
+    raw_pointer1 = VoteState(process.read(
+        process.get_pointer(client_dll + 0x00DAC5B4, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xDB4])))
+    raw_pointer2 = VoteState(process.read(
+        process.get_pointer(client_dll + 0x00DA1284, offsets=[0x5C, 0x48, 0xB8, 0xC, 0xC, 0x3C, 0xE6C])))
 
 
 def changes_loop():
@@ -84,8 +81,8 @@ def changes_loop():
     if previous_pointer2 != raw_pointer2:
         previous_pointer2 = raw_pointer2
         current_state = raw_pointer2
-    if current_state == 3 or current_state == 4:
-        current_state = 0
+    if current_state == VoteState(3) or current_state == VoteState(4):
+        current_state = VoteState(0)
         time.sleep(10)
 
 
@@ -97,7 +94,7 @@ def changes_loop():
                'menuTitle': 'About',
                'name': 'ImposterBot Among Us Game Listener',
                'description': 'Game listener to send Among Us game information to ImposterBot',
-               'version': '0.0.2',
+               'version': '0.0.3',
                'copyright': '2020',
                'website': 'https://github.com/shiv213/ImposterBot',
                'developer': 'https://shivvtrivedi.com/',
@@ -118,7 +115,13 @@ def main():
     parser.add_argument(
         'guild_id',
         metavar='Server ID',
-        help='Can be found using the .server command!'
+        help='Can be found using the .info command!'
+    )
+
+    parser.add_argument(
+        'vc_id',
+        metavar='Voice Channel ID',
+        help='Can be found using the .info command!'
     )
 
     args = parser.parse_args()
@@ -137,11 +140,35 @@ def main():
         time.sleep(1)
         changes_loop()
         if previous_state != current_state:
-            if current_state == 0:
+            pushData["serverID"] = args.guild_id
+            pushData["vcID"] = args.vc_id
+            # pushData["roomCode"] = "TESTER"
+            # pushData["players"] = {}
+            # pushData["players"]["red"] = "alive"
+            # pushData["players"]["blue"] = "alive"
+            # pushData["players"]["green"] = "alive"
+            # pushData["players"]["pink"] = "alive"
+            # pushData["players"]["orange"] = "alive"
+            # pushData["players"]["yellow"] = "alive"
+            # pushData["players"]["black"] = "alive"
+            # pushData["players"]["white"] = "alive"
+            # pushData["players"]["purple"] = "alive"
+            # pushData["players"]["brown"] = "alive"
+            # pushData["players"]["cyan"] = "alive"
+            # pushData["players"]["lime"] = "alive"
+
+            if current_state == VoteState(0):
+                pushData["gameState"] = "game"
                 print(stylize("MUTED", fg("red") + attr("bold")))
             else:
+                pushData["gameState"] = "discussion"
                 print(stylize("UNMUTED", fg("green") + attr("bold")))
-            db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
+            # print(pushData)
+            response = requests.post('https://imposter-bot.herokuapp.com/push', json=pushData)
+            if response.status_code != 200:
+                print("Connection error!")
+            # print("Status code: ", response.status_code)
+            # db.child("guilds/" + args.guild_id).child("voteState").set(current_state)
 
 
 if __name__ == '__main__':
