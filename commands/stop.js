@@ -5,7 +5,7 @@ module.exports = {
     cooldown: 5,
     guildOnly: true,
     args: false,
-    execute(message, args, {Canvas: Canvas, Discord: Discord}) {
+    execute(message) {
         if (message.member.voice.channel) {
             for (let game = 0; game < database.length; game++) {
                 if (database[game].serverID === message.guild.id && database[game].vcID === message.member.voice.id) {

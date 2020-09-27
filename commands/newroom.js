@@ -19,6 +19,5 @@ module.exports = {
             .setTimestamp()
             .setFooter('Join now!');
         message.channel.send(newgameEmbed).then(r => message.channel.stopTyping());
-
     },
 };
