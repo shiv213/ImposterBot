@@ -6,8 +6,7 @@ module.exports = {
     cooldown: 10,
     guildOnly: true,
     args: true,
-    async execute(message, args, {Canvas: Canvas, Discord: Discord}) {
-        await message.channel.startTyping();
+    execute(message, args, {Canvas: Canvas, Discord: Discord}) {
         const newgameEmbed = new Discord.MessageEmbed()
             .setColor('#8a0000')
             .setTitle('New Among Us Game!')
@@ -18,6 +17,6 @@ module.exports = {
             )
             .setTimestamp()
             .setFooter('Join now!');
-        message.channel.send(newgameEmbed).then(r => message.channel.stopTyping());
+        message.channel.send(newgameEmbed);
     },
 };
