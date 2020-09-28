@@ -7,6 +7,7 @@ module.exports = {
     args: false,
     execute(message) {
         if (message.member.voice.channel) {
+            message.member.voice.channel.members.each(async user => await user.voice.setMute(false).catch(err => console.log(err)));
             for (let game in database) {
                 if (database[game].serverID === message.guild.id && database[game].vcID === message.member.voice.channel.id) {
                     if (database[game].started) {
