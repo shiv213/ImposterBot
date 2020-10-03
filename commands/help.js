@@ -20,7 +20,7 @@ module.exports = {
             },
             "author": {
                 "name": "ImposterBot",
-                "url": "https://discord.com/oauth2/authorize?client_id=755510808397742171&permissions=66583376&scope=bot",
+                "url": "https://discord.com/api/oauth2/authorize?client_id=755510808397742171&permissions=29878336&scope=bot",
                 "icon_url": "https://i.imgur.com/TLMyjPM.png"
             },
             "fields": [{
