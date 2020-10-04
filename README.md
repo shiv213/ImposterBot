@@ -54,11 +54,15 @@ To use this bot on your Discord server, you need invite using this link:
 
 [Invite Imposter Bot](https://discord.com/api/oauth2/authorize?client_id=755510808397742171&permissions=29878336&scope=bot)
 
-You will also need to download the latest version of [ImposterBot Among Us Game Listener](https://github.com/shiv213/ImposterBot/releases/latest)
+You will also need to download the latest version of [ImposterBot Among Us Game Listener](https://github.com/shiv213/ImposterBot/releases/latest) (Download the file under assets called "ImposterBot.Among.Us.Game.Listener_X.X.X.zip")
 
 ##### In order to run the `ImposterBot Among Us Game Listener.py`:
--   Make sure you have Python 3 installed! 
--   Run `python setup.py install`
+- Unzip the downloaded file and place the contents in a dedicated folder
+- Open the command prompt inside the folder
+- **Make sure you have Python 3 installed!**
+- Run `python setup.py install`
+- **Make sure you launch Among Us before running the command:**
+- `python "ImposterBot Among Us Game Listener.py"` in the command prompt
 
 ## Emailware
 
