@@ -13,7 +13,7 @@ module.exports = {
                     if (database[game].started) {
                         database[game].started = false;
                     } else {
-                        message.channel.send("Already running.");
+                        message.channel.send("Already stopped.");
                     }
                 }
             }
