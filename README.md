@@ -2,7 +2,7 @@
   <br>
   <a href="https://github.com/shiv213/ImposterBot"><img src="https://i.imgur.com/TLMyjPM.png" alt="ImposterBot" width="100"></a>
   <br>
-  ImposterBot (BETA)<br>NOT WORKING ON THE LATEST VERSION
+  ImposterBot (BETA)<br>Only working for v2020.9.9s
   <br>
 </h1>
 <h4 align="center">
